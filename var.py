@@ -13,3 +13,5 @@ FINAL_LINK = f'https://{COUNTRY[1]}.computrabajo.com/empleos-en-{ZONE[1]}?by=pub
 POSTULATE = "/html/body/main/div[2]/div/div[2]/div[2]/div[2]/div/a"
 
 LOGGIN_TEXT = '/html/body/section/div/form/div[1]/p[3]'
+
+CONTINUE = True

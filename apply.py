@@ -1,5 +1,6 @@
 
-from var import FINAL_LINK, LAST, MAXIMIZE, POSTULATE, LOGGIN_TEXT
+from var import FINAL_LINK, LAST, MAXIMIZE, POSTULATE, LOGGIN_TEXT, CONTINUE
+
 
 import pandas as pd
 import json
@@ -18,8 +19,7 @@ chromeOptions.add_argument(f"--user-data-dir={profilePath}")
 driver = webdriver.Chrome(options=chromeOptions)
 driver.set_window_size(600, 1000)
 
-#print("Current session is {}".format(driver.session_id))
-
+postulated = 0
 
 def loggin():
     try:
@@ -46,30 +46,46 @@ def loggin():
 
         pass
 
+if CONTINUE:
+        
+    if MAXIMIZE == 0:
+        driver.minimize_window()
+        print("Windows Minimized")
+    else:
+        print("Windows Maximized")
 
-if MAXIMIZE == 0:
-    driver.minimize_window()
-    print("Windows Minimized")
+
+    with open('data/jobs.json', 'r') as openfile:
+        data_jobs = json.load(openfile)
+
+
+    print("POSTULATING TO JOBS...")
+    #clear()
+
+    for i, job in enumerate(data_jobs):
+
+        if job['used'] == 1:
+            print('job already taken!')
+            continue
+        else:
+
+            driver.get(job['link'])
+
+            try:
+            # CLICK on Postulate Link
+                driver.find_element(By.XPATH, POSTULATE).click()
+                job['used'] = 1
+                postulated += 1
+                print("Job Postultaed!", postulated)
+                loggin()
+            # SAVE FILE
+                with open("data/jobs.json", "w") as outfile:
+                    json.dump(data_jobs, outfile)
+
+            except:
+                continue
+
 else:
-    print("Windows Maximized")
-
-
-df_Data = pd.read_json('data.json')
-
-for i, job in enumerate(df_Data.link):
-    # print(job)
-    if df_Data.loc[i, 'used'] == 1:
-        print("Job already used, skiped.", i)
-        continue
-
-    driver.get(job)
-    try:
-        # CLICK on Postulate Link
-        driver.find_element(By.XPATH, POSTULATE).click()
-        df_Data.loc[i, 'used'] = 1
-        print("Job Postultaed!", i)
-        loggin()
-        df_Data.to_json('data.json')
-
-    except:
-        continue
+    print("Processs ended until no new job to apply!")
+    
+driver.close()

@@ -1,9 +1,9 @@
 from numpy import full_like
-from var import FINAL_LINK, LAST, MAXIMIZE
+from var import FINAL_LINK, LAST, MAXIMIZE, CONTINUE
 
 import pandas as pd
 import json
-import os
+from os import system, name
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -20,24 +20,42 @@ driver.set_window_size(600, 1000)
 #print("Current session is {}".format(driver.session_id))
 
 
+
 if MAXIMIZE == 0:
     driver.minimize_window()
     print("Windows Minimized")
 else:
     print("Windows Maximized")
 
+with open('data/jobs.json', 'r') as openfile:
+    data_jobs = json.load(openfile)
 
-job_list = []
-already_saved_df = pd.read_json('data.json')
+try:
+    jobs_arr_link = []
+    for x in data_jobs:
+        jobs_arr_link.append(x['link'])
+except:
+    pass
 
+def clear():
+ 
+    # for windows
+    if name == 'nt':
+        _ = system('cls')
+ 
+    # for mac and linux(here, os.name is 'posix')
+    else:
+        _ = system('clear')
+
+
+print("FINDING JOBS...")
+clear()
 
 def jobs_arr(link):
 
     driver.get(link)
 
     all_links = driver.find_elements(By.TAG_NAME, 'a')
-
-    print(len(all_links))
 
     if len(all_links) <= 100:
         return False
@@ -47,13 +65,14 @@ def jobs_arr(link):
         try:
 
             if "oferta-de-trabajo" in job_link.get_attribute("href"):
-                
-                
 
-                if job_link.text in already_saved_df.name.array:
-                    print("Job already saved")
-                    continue
-                
+                try:
+                    if job_link.get_attribute("href") in jobs_arr_link:
+                        print('No new jobs founded')
+                        return False
+
+                except:
+                    pass
 
                 new_job = {
                     "name": job_link.text,
@@ -61,26 +80,28 @@ def jobs_arr(link):
                     "used": 0
                 }
 
-                job_list.append(new_job)
-                
+                data_jobs.append(new_job)
+
+                # SAVE FILE
+                with open("data/jobs.json", "w") as outfile:
+                    json.dump(data_jobs, outfile)
+
         except:
 
             continue
 
 
+for i in range(1, 30):
 
-
-for i in range(1,30):
-    
     link = f'{FINAL_LINK}{i}'
 
-    print("job_qty: ", len(job_list))
+    print("job_qty: ", len(data_jobs))
 
-    jobs_list_df = pd.DataFrame(job_list)
+    # print(already_saved_df.name)
 
     if jobs_arr(link) == False:
+
         break
 
-jobs_list_df.to_json('data.json')
 
 driver.close()
