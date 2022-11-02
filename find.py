@@ -28,6 +28,7 @@ else:
 
 
 job_list = []
+already_saved_df = pd.read_json('data.json')
 
 
 def jobs_arr(link):
@@ -36,7 +37,9 @@ def jobs_arr(link):
 
     all_links = driver.find_elements(By.TAG_NAME, 'a')
 
-    if len(all_links) <= 40:
+    print(len(all_links))
+
+    if len(all_links) <= 100:
         return False
 
     for i, job_link in enumerate(all_links):
@@ -45,6 +48,13 @@ def jobs_arr(link):
 
             if "oferta-de-trabajo" in job_link.get_attribute("href"):
                 
+                
+
+                if job_link.text in already_saved_df.name.array:
+                    print("Job already saved")
+                    continue
+                
+
                 new_job = {
                     "name": job_link.text,
                     "link": job_link.get_attribute("href"),
@@ -56,6 +66,8 @@ def jobs_arr(link):
         except:
 
             continue
+
+
 
 
 for i in range(1,30):
