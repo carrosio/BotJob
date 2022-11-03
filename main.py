@@ -1,8 +1,10 @@
-from var import COUNTRY
 
-searchs = ['uy', 'ar']
+import time
 
-for x in searchs:
-    COUNTRY.append(x)
+
+while True:
+
     import find
     import apply
+    print("Next Search in")
+    time.sleep(3600)
