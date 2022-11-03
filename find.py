@@ -19,26 +19,6 @@ driver.set_window_size(600, 1000)
 
 #print("Current session is {}".format(driver.session_id))
 
-last = 10
-
-
-if MAXIMIZE == 0:
-    driver.minimize_window()
-    print("Windows Minimized")
-else:
-    print("Windows Maximized")
-
-with open('data/jobs.json', 'r') as openfile:
-    data_jobs = json.load(openfile)
-
-try:
-    jobs_arr_link = []
-    for x in data_jobs:
-        jobs_arr_link.append(x['link'])
-except:
-    pass
-
-
 
 def clear():
  
@@ -51,8 +31,18 @@ def clear():
         _ = system('clear')
 
 
-print("FINDING JOBS...")
-clear()
+if MAXIMIZE == 0:
+    driver.minimize_window()
+    print("Windows Minimized")
+else:
+    print("Windows Maximized")
+
+with open('data/jobs.json', 'r') as openfile:
+    data_jobs = json.load(openfile)
+
+
+
+
 
 def jobs_arr(link):
 
@@ -62,19 +52,28 @@ def jobs_arr(link):
 
     for i, job_link in enumerate(all_links):
 
+        jobs_arr_link = []
+
+        try:
+            
+            for x in data_jobs:
+                jobs_arr_link.append(x['link'])
+        except:
+            pass
+
+
         try:
 
             #check the JOBS LINKS
             if "oferta-de-trabajo" in job_link.get_attribute("href"):
-
-                #print(jobs_arr_link)
                 
                 if job_link.get_attribute("href") in jobs_arr_link:
+                    
                     print('Job Already saved')
-                    return False
+                    
+                    continue
 
-                
-
+                print("New Job Added!", job_link.text)
                 new_job = {
                     "name": job_link.text,
                     "link": job_link.get_attribute("href"),
@@ -92,22 +91,18 @@ def jobs_arr(link):
             continue
 
 
-for i in range(1, last):
 
+
+for i in range(1, 5):
 
     link = f'{FINAL_LINK}{i}'
-
-    print("job_qty: ", len(data_jobs))
-
-    # print(already_saved_df.name)
-
 
     if jobs_arr(link) == False:
 
         break
-    
-    last = int(int(driver.find_element(By.XPATH, '/html/body/main/div[4]/div[2]/div[1]/div[1]/div[1]/h1/span').text) / 20)
-    print(last)
+
+    print("Next Page")
+    print("Already Saved Jobs Qty: ", len(data_jobs))
     
 
 driver.close()

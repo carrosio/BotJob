@@ -51,56 +51,50 @@ def loggin():
 
         pass
 
-if CONTINUE:
+
         
-    if MAXIMIZE == 0:
-        driver.minimize_window()
-        print("Windows Minimized")
+if MAXIMIZE == 0:
+    driver.minimize_window()
+    print("Windows Minimized")
+else:
+    print("Windows Maximized")
+
+
+with open('data/jobs.json', 'r') as openfile:
+    data_jobs = json.load(openfile)
+
+
+
+
+
+for i, job in enumerate(data_jobs):
+
+    all_p = driver.find_elements(By.TAG_NAME, 'p')
+
+    if job['used'] == 1:
+        print('job already taken!', job['name'])
+        continue
+
     else:
-        print("Windows Maximized")
 
+        driver.get(job['link'])
 
-    with open('data/jobs.json', 'r') as openfile:
-        data_jobs = json.load(openfile)
+        try:
+        # CLICK on Postulate Link
+            driver.find_element(By.XPATH, POSTULATE).click()
 
+            job['used'] = 1            
+            
+            print("#", len(data_jobs) - i , "Job Postultaed!", job['name'], COUNTRY)
 
-    print("POSTULATING TO JOBS...")
-    #clear()
+            loggin()
+        # SAVE FILE
+            with open("data/jobs.json", "w") as outfile:
+                json.dump(data_jobs, outfile)
 
-    for i, job in enumerate(data_jobs):
-
-        all_p = driver.find_elements(By.TAG_NAME, 'p')
-
-        if job['used'] == 1:
-            print('job already taken!', job['name'])
+        except:
             continue
 
-        else:
 
-            driver.get(job['link'])
 
-            try:
-            # CLICK on Postulate Link
-                driver.find_element(By.XPATH, POSTULATE).click()
-                #try:
-                #    driver.find_element(By.XPATH, '/html/body/div/form/div/article/div[1]/div[2]/p[1]')
-                #    job['used'] = 2
-                #except:
-                #    pass
-
-                job['used'] = 1
-                
-                print("#", len(data_jobs) - i , "Job Postultaed!", job['name'])
-
-                loggin()
-            # SAVE FILE
-                with open("data/jobs.json", "w") as outfile:
-                    json.dump(data_jobs, outfile)
-
-            except:
-                continue
-
-else:
-    print("Processs ended until no new job to apply!")
-    
 driver.close()

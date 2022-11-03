@@ -6,9 +6,9 @@ COUNTRY = 'ar'
 if COUNTRY == 'uy':
     ZONE = 'montevideo'
 
-# [buenos-aires-gba, capital-federal]
+arg_places = ["buenos-aires-gba", "capital-federal"]
 if COUNTRY == 'ar':
-    ZONE = 'capital-federal'
+    ZONE = arg_places[1]
 
 
 #TIME = ['recent', '1d', '7d']
