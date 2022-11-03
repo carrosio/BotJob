@@ -1,5 +1,5 @@
 
-from var import FINAL_LINK, LAST, MAXIMIZE, POSTULATE, LOGGIN_TEXT, CONTINUE
+from var import FINAL_LINK, LAST, MAXIMIZE, COUNTRY, POSTULATE, LOGGIN_TEXT, CONTINUE
 
 
 import pandas as pd
@@ -26,11 +26,16 @@ def loggin():
         #driver.find_element(By.ID, POSTULATE)
         mail_btm = driver.find_element(
             By.XPATH, '/html/body/section/div/form/div[1]/div[3]/input')
-        mail_btm.send_keys("carrosiomauricio@gmail.com")
+        
+        mail = "carrosiomauricio@gmail.com"
+        if COUNTRY == 'ar':
+            mail = "pepemauri25@gmail.com"
+        mail_btm.send_keys(mail)
+
         continue_btm = driver.find_element(
             By.XPATH, "/html/body/section/div/form/div[1]/a")
         continue_btm.click()
-        time.sleep(9999)
+        time.sleep(2)
 
         password_btm = driver.find_element(
             By.XPATH, "/html/body/section/div/form/div[2]/input")
