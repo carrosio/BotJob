@@ -1,5 +1,5 @@
 
-from var import FINAL_LINK, LAST, MAXIMIZE, COUNTRY, POSTULATE, LOGGIN_TEXT, CONTINUE
+from var import FINAL_LINK, MAXIMIZE, COUNTRY, POSTULATE, LOGGIN_TEXT, CONTINUE
 
 
 import pandas as pd
@@ -69,9 +69,16 @@ if CONTINUE:
 
     for i, job in enumerate(data_jobs):
 
+        all_p = driver.find_elements(By.TAG_NAME, 'p')
+
         if job['used'] == 1:
-            print('job already taken!')
+            print('job already taken!', job['name'])
             continue
+
+        if job['used'] == 2:
+            print('job with questions', job['name'])
+            continue
+
         else:
 
             driver.get(job['link'])
@@ -79,9 +86,14 @@ if CONTINUE:
             try:
             # CLICK on Postulate Link
                 driver.find_element(By.XPATH, POSTULATE).click()
+                try:
+                    driver.find_element(By.XPATH, '/html/body/div/form/div/article/div[1]/div[2]/p[1]')
+                    job['used'] = 2
+                except:
+                    pass
                 job['used'] = 1
                 postulated += 1
-                print("Job Postultaed!", postulated)
+                print("Job Postultaed!", job['name'])
                 loggin()
             # SAVE FILE
                 with open("data/jobs.json", "w") as outfile:

@@ -1,5 +1,5 @@
 from numpy import full_like
-from var import FINAL_LINK, LAST, MAXIMIZE, CONTINUE
+from var import FINAL_LINK, MAXIMIZE, CONTINUE
 
 import pandas as pd
 import json
@@ -19,6 +19,7 @@ driver.set_window_size(600, 1000)
 
 #print("Current session is {}".format(driver.session_id))
 
+last = 15
 
 
 if MAXIMIZE == 0:
@@ -36,6 +37,8 @@ try:
         jobs_arr_link.append(x['link'])
 except:
     pass
+
+
 
 def clear():
  
@@ -57,28 +60,20 @@ def jobs_arr(link):
 
     all_links = driver.find_elements(By.TAG_NAME, 'a')
 
-    all_p = driver.find_elements(By.TAG_NAME, 'p')
-
-    #for x in all_p:
-    #    if "Ya has aplicado para esta oferta" in x.text:
-    #        print("Already applied dedtected")
-    #        return False
-
-    
-
     for i, job_link in enumerate(all_links):
 
         try:
 
+            #check the JOBS LINKS
             if "oferta-de-trabajo" in job_link.get_attribute("href"):
 
-                try:
-                    if job_link.get_attribute("href") in jobs_arr_link:
-                        print('No new jobs founded')
-                        return False
+                #print(jobs_arr_link)
+                
+                if job_link.get_attribute("href") in jobs_arr_link:
+                    print('Job Already saved')
+                    return False
 
-                except:
-                    pass
+                
 
                 new_job = {
                     "name": job_link.text,
@@ -97,7 +92,8 @@ def jobs_arr(link):
             continue
 
 
-for i in range(1, 30):
+for i in range(1, last):
+
 
     link = f'{FINAL_LINK}{i}'
 
@@ -109,6 +105,9 @@ for i in range(1, 30):
     if jobs_arr(link) == False:
 
         break
-
+    
+    last = int(int(driver.find_element(By.XPATH, '/html/body/main/div[4]/div[2]/div[1]/div[1]/div[1]/h1/span').text) / 20)
+    print(last)
+    
 
 driver.close()
