@@ -64,8 +64,7 @@ def jobs_arr(link):
     #        print("Already applied dedtected")
     #        return False
 
-    if len(all_links) <= 100:
-        return False
+    
 
     for i, job_link in enumerate(all_links):
 
@@ -105,6 +104,7 @@ for i in range(1, 30):
     print("job_qty: ", len(data_jobs))
 
     # print(already_saved_df.name)
+
 
     if jobs_arr(link) == False:
 
