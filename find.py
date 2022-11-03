@@ -57,6 +57,13 @@ def jobs_arr(link):
 
     all_links = driver.find_elements(By.TAG_NAME, 'a')
 
+    all_p = driver.find_elements(By.TAG_NAME, 'p')
+
+    #for x in all_p:
+    #    if "Ya has aplicado para esta oferta" in x.text:
+    #        print("Already applied dedtected")
+    #        return False
+
     if len(all_links) <= 100:
         return False
 
