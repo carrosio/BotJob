@@ -19,7 +19,7 @@ driver.set_window_size(600, 1000)
 
 #print("Current session is {}".format(driver.session_id))
 
-last = 2
+last = 10
 
 
 if MAXIMIZE == 0:

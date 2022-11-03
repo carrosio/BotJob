@@ -15,7 +15,7 @@ if COUNTRY == 'ar':
 
 
 
-MAXIMIZE = 1
+MAXIMIZE = 0
 
 FINAL_LINK = f'https://{COUNTRY}.computrabajo.com/empleos-en-{ZONE}?by=publicationtime&pubdate=1&p='
 

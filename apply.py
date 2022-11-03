@@ -90,8 +90,8 @@ if CONTINUE:
 
                 job['used'] = 1
                 
-                print("Job Postultaed!", job['name'])
-                
+                print("#", len(data_jobs) - i , "Job Postultaed!", job['name'])
+
                 loggin()
             # SAVE FILE
                 with open("data/jobs.json", "w") as outfile:
