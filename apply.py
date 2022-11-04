@@ -1,6 +1,6 @@
 
 from var import FINAL_LINK, MAXIMIZE, COUNTRY, POSTULATE, LOGGIN_TEXT, CONTINUE
-
+from os import system, name
 
 import pandas as pd
 import json
@@ -20,6 +20,18 @@ driver = webdriver.Chrome(options=chromeOptions)
 driver.set_window_size(600, 1000)
 
 postulated = 0
+
+def clear():
+ 
+    # for windows
+    if name == 'nt':
+        _ = system('cls')
+ 
+    # for mac and linux(here, os.name is 'posix')
+    else:
+        _ = system('clear')
+
+clear()
 
 def loggin():
     try:
@@ -51,7 +63,6 @@ def loggin():
 
         pass
 
-
         
 if MAXIMIZE == 0:
     driver.minimize_window()
@@ -64,15 +75,15 @@ with open('data/jobs.json', 'r') as openfile:
     data_jobs = json.load(openfile)
 
 
-
-
-
 for i, job in enumerate(data_jobs):
 
     all_p = driver.find_elements(By.TAG_NAME, 'p')
 
     if job['used'] == 1:
         print('job already taken!', job['name'])
+        continue
+    if job['used'] == 3:
+        print('job link working bad, skipped')
         continue
 
     else:
@@ -93,6 +104,7 @@ for i, job in enumerate(data_jobs):
                 json.dump(data_jobs, outfile)
 
         except:
+            job['used'] = 3
             continue
 
 

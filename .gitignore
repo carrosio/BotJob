@@ -4,3 +4,6 @@ __pycache__/var.cpython-39.pyc
 __pycache__/var.cpython-310.pyc
 __pycache__/var.cpython-39.pyc
 __pycache__/find.cpython-310.pyc
+__pycache__/var.cpython-39.pyc
+.gitignore
+__pycache__/apply.cpython-39.pyc

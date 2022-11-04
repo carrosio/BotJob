@@ -19,7 +19,6 @@ driver.set_window_size(600, 1000)
 
 #print("Current session is {}".format(driver.session_id))
 
-
 def clear():
  
     # for windows
@@ -30,6 +29,7 @@ def clear():
     else:
         _ = system('clear')
 
+clear()
 
 if MAXIMIZE == 0:
     driver.minimize_window()
@@ -41,6 +41,16 @@ with open('data/jobs.json', 'r') as openfile:
     data_jobs = json.load(openfile)
 
 
+jobs_arr_link = []
+
+try:
+
+    for x in data_jobs:
+        jobs_arr_link.append(x['name'])
+
+except:
+
+    pass
 
 
 
@@ -52,26 +62,16 @@ def jobs_arr(link):
 
     for i, job_link in enumerate(all_links):
 
-        jobs_arr_link = []
-
-        try:
-            
-            for x in data_jobs:
-                jobs_arr_link.append(x['link'])
-        except:
-            pass
-
-
         try:
 
             #check the JOBS LINKS
             if "oferta-de-trabajo" in job_link.get_attribute("href"):
                 
-                if job_link.get_attribute("href") in jobs_arr_link:
+                if job_link.text in jobs_arr_link:
                     
                     print('Job Already saved')
                     
-                    continue
+                    return False
 
                 print("New Job Added!", job_link.text)
                 new_job = {
@@ -91,14 +91,15 @@ def jobs_arr(link):
             continue
 
 
-
+temp_apply_jobs = []
+prev_data_jobs_len = len(data_jobs)
 
 for i in range(1, 5):
 
     link = f'{FINAL_LINK}{i}'
 
     if jobs_arr(link) == False:
-
+        print("New Jobs Finded: ", len(data_jobs) - prev_data_jobs_len)
         break
 
     print("Next Page")
