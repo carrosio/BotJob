@@ -63,50 +63,40 @@ def loggin():
 
         pass
 
+with open('used.json', 'r') as openfile:
+    used_jobs = json.load(openfile)
+
+data_jobs = pd.read_json('data.json')
+
+jobs_links_arr = data_jobs.id.array
+#print(data_jobs)
+for i, job in enumerate(jobs_links_arr):
+
+    proceded = round((i / len(jobs_links_arr))* 100) 
+
+    print("Proceded Jobs: ", proceded, "%")
+
+    if job in used_jobs:
+        print("Already used", job)
+        continue
+    
+    link = f'https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-{job}#lc=ListOffers-Score-0'
+    
+    driver.get(link)
+
+    try:
+        driver.find_element(By.XPATH, POSTULATE).click()
+        print("Posutlated!", job)
+
+        used_jobs.append(job)
         
-if MAXIMIZE == 0:
-    driver.minimize_window()
-    print("Windows Minimized")
-else:
-    print("Windows Maximized")
+        with open("used.json", "w") as outfile:
+                    json.dump(used_jobs, outfile)
 
+        
 
-with open('data/jobs.json', 'r') as openfile:
-    data_jobs = json.load(openfile)
-
-
-for i, job in enumerate(data_jobs):
-
-    all_p = driver.find_elements(By.TAG_NAME, 'p')
-
-    if job['used'] == 1:
-        print('job already taken!', job['name'])
+    except:
         continue
-    if job['used'] == 3:
-        print('job link working bad, skipped')
-        continue
-
-    else:
-
-        driver.get(job['link'])
-
-        try:
-        # CLICK on Postulate Link
-            driver.find_element(By.XPATH, POSTULATE).click()
-
-            job['used'] = 1            
-            
-            print("#", len(data_jobs) - i , "Job Postultaed!", job['name'], COUNTRY)
-
-            loggin()
-        # SAVE FILE
-            with open("data/jobs.json", "w") as outfile:
-                json.dump(data_jobs, outfile)
-
-        except:
-            job['used'] = 3
-            continue
-
-
+    
 
 driver.close()
